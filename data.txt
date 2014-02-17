@@ -1,0 +1,9 @@
+H3K27me3 H2AK126su H4AK5ac H2AS1ph H3K27ac Transcription Count
+Present Absent Present Absent Absent Inactive 25
+Absent Absent Present Present Absent Active 10
+Present Absent Absent Present Absent Inactive 15
+Present Absent Present Present Absent Active 5
+Absent Present Absent Absent Present Active 15
+Absent Present Present Absent Absent Inactive 5
+Absent Absent Absent Absent Present Active 20
+Present Present Present Absent Absent Inactive 10
