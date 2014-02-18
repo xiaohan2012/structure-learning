@@ -108,16 +108,24 @@ def search_for_improvement ():
         newg = BN (g.V, E, g.data)
         
         if mdl (newg) < gMDL and BDeu (newg, 1) > gBD1 and BDeu (newg, 1000) > gBD1000:
-            print 'bingo!', edge
-            print mdl (newg) , gMDL
-            print BDeu (newg, 1) , gBD1
-            print BDeu (newg, 1000) , gBD1000
+            print 'bingo! adding edge',edge
+            print 'MDL from', mdl (newg), 'to',  gMDL
+            print 'BDeu (alpha=1) from', BDeu (newg, 1), 'to' , gBD1
+            print 'BDeu (alpha=1000) from', BDeu (newg, 1000), 'to' , gBD1000
+            print 
             
 if __name__ == '__main__':
     from scores import mdl, BDeu
     
-    # g1_score ()
-    # g2_score ()
+    import sys
+    
+    if len(sys.argv) > 1 and sys.argv [1] == 'improve':
+        search_for_improvement ()
+    else:
+        print 'G1'
+        g1_score ()
+        print '\nG2'
+        g2_score ()
 
         
-    search_for_improvement ()
+        
