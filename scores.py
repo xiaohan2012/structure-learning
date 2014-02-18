@@ -6,7 +6,7 @@ def product (vals):
     
 def mdl (g):
     """
-    the Minimum Descrition Length calculator for Bayesian network
+    the Minimum Descrition Length calculator for Bayesian network g
     """
     n = len (g.V) # the variable count
     N = len (g.data)# the sample number
@@ -41,6 +41,9 @@ def mdl (g):
     return -logll + complexity
                 
 def BDeu (g, alpha):
+    """
+    the BDeu score for graph g
+    """
     lll = 0 # log likelihood
 
     for v in g.V:

@@ -50,7 +50,7 @@ class Variable (object):
         return str (self)
 
     def __eq__ (self, obj):
-        return self.var == obj.var and self.values == obj.values
+        return hasattr (obj, 'var') and hasattr (obj, 'values') and self.var == obj.var and self.values == obj.values
 
 from data_reader import read_data
 data = read_data ('data.txt')
