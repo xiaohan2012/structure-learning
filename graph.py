@@ -42,7 +42,7 @@ class Variable (object):
         self.values = values
 
         self.card = len(self.values) # the cardinality
-        
+    
     def __str__ (self):
         return "%s" %(self.var)
         

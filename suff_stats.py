@@ -6,7 +6,7 @@ class Data (list):
         self.d = data;
         self.prev = prev
         
-        super (Data, self).__init__ (data)
+        super (Data, self).__init__ (data)        
         
     def filter (self, **kwargs):
         return Data(filter(lambda row: reduce (lambda acc, (field, value): acc and (row [field] == value), kwargs.items (), True),
@@ -79,6 +79,3 @@ if __name__ == '__main__':
     print 'P (P / T = Low, S = Low)'
     print '%.4f' %(d.filter (S= 'Low', T= 'Low', P= 'High').sum () / d.filter (S= 'Low', T= 'Low').sum ())
     print '%.4f' %(d.filter (S= 'Low', T= 'Low', P= 'Low').sum () / d.filter (S= 'Low', T= 'Low').sum ())
-
-
-

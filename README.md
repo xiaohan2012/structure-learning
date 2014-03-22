@@ -1,11 +1,23 @@
 structure-learning
 ==================
 
-Homework code for the structure learning part of Graphical Model  course
+##Solving software dependency
 
+Please do:
 
-##Instructions
+`> pip install -r requirements.txt`
 
-1. To get various scores of G1 and G2  , run `python graph.py`.
-2. See what edge addition operation can improve the scores, run `python graph.py improve`
-3. See the structure learning result, run `python struct_learn.py`.
+##Chow&Liu tree algorithm
+
+To run the chow-liu tree algorithm, please run the file `chow_liu_tree.py`
+
+Usage:
+
+`> python chow_liu_tree.py [predict|sorted_edge|graphviz]`
+
+Argument: 
+
+1. predict: print the prediction of the joint probabilities of test set
+2. sorted_edge: print the edges by order of their mutual information gain
+3. graphviz: print the graphviz format file of the learned tree structure
+
