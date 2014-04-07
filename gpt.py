@@ -8,12 +8,12 @@ George Rebane & Judea Pearl, THE RECOVERY OF CAUSAL POLY-TREES FROM STATISTICAL 
 """
 
 import math, random
-from itertools import product, combinations, groupby
+from itertools import product, combinations, groupby, permutations
 from graph import Variable
 from data_reader import read_row_data
 from suff_stats import Data
 from stat_test import marginal_independence
-from util import viz_tree_str, has_loop
+from util import viz_tree_str, sort_edges
 
 import networkx as nx
 
@@ -98,11 +98,11 @@ if __name__ == "__main__":
     import os, pickle
     if os.path.exists ("chow_liu_tree.pickle"): 
         print "pickle exists, load it directly"
-        tree = pickle.load (open ("chow_liu_tree.pickle", "r"))
+        tree, _, edge_weights = pickle.load (open ("chow_liu_tree.pickle", "r"))
     else:
         print "pickle does not exist, calculate it and dump it"
-        tree, _, _ = chowliu_learn (data, variables)
-        pickle.dump (tree, open ("chow_liu_tree.pickle", "w"))
+        tree, _, edge_weights = chowliu_learn (data, variables)
+        pickle.dump (result, open ("chow_liu_tree.pickle", "w"))
         
     print "learning structure..."
     edges = GPT_learn (tree, data, variables)
@@ -121,8 +121,8 @@ if __name__ == "__main__":
     elif arg == "graphviz":
         viz_str = viz_tree_str (edges, variables, directed = True)
         print viz_str
-    elif arg == "sorted_edge":
-        for (v1, v2), w in edge_weight_sorted_by_weight (edge_weights):
+    elif arg == "sorted_edges":
+        for v1, v2 in sort_edges (edges, list (permutations (variables, 2)), edge_weights):
             print "%s %s" %(v1, v2)
     else:
         usage ()

@@ -36,7 +36,6 @@ class Parents (list):
         return product (*map (lambda p: p.values, self))
             
 class Variable (object):
-            
     def __init__ (self, var, values):
         self.var = var
         self.values = values
@@ -51,6 +50,9 @@ class Variable (object):
 
     def __eq__ (self, obj):
         return hasattr (obj, 'var') and hasattr (obj, 'values') and self.var == obj.var and self.values == obj.values
+        
+    def __hash__(self):
+        return hash (self.var + ','.join(self.values))
 
 from data_reader import read_data
 data = read_data ('data.txt')

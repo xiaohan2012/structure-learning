@@ -1,5 +1,3 @@
-import networkx as nx
-
 def viz_tree_str (tree, variables, directed = True):
     """
     the graph viz tree string representation
@@ -20,6 +18,16 @@ def viz_tree_str (tree, variables, directed = True):
     viz_str += '}';
     return viz_str
 
+def sort_edges (graph_edges, all_possible_edges, weight_table):
+    """
+    sort the edges according to its member ship in graph_edges and its weight in ascending order
+    """
+    
+    key_func = lambda edge: weight_table [edge]
+    remaining_edges = list(set (all_possible_edges) - set (graph_edges))
+    return sorted (graph_edges, key = key_func, reverse= True) + sorted (remaining_edges, key = key_func, reverse= True)
+    
+
 def has_loop (edges):
     """
     Determines if the loops exist in the dge list
@@ -30,9 +38,8 @@ def has_loop (edges):
     Return: 
     boolean: has loop or not
     """
+    import networkx as nx
     g = nx.DiGraph (edges + map(lambda (v1, v2): (v2, v1), edges))
     cycles = nx.simple_cycles (g)
-    
     not_simple_cycles = filter (lambda path: len(path) > 3, cycles) #filter out selfloops
-
     return  len(not_simple_cycles) > 0

@@ -10,7 +10,7 @@ from itertools import product, combinations
 from graph import Variable
 from data_reader import read_row_data
 from suff_stats import Data
-from util import viz_tree_str, has_loop
+from util import viz_tree_str
 
 def chowliu_learn (data, variables):
     """
