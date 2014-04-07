@@ -5,29 +5,12 @@ Structure learning using the chow-liu algorithm.
 Some resource: http://en.wikipedia.org/wiki/Chow%E2%80%93Liu_tree
 """
 import math
+from itertools import product, combinations
 
 from graph import Variable
 from data_reader import read_row_data
 from suff_stats import Data
-
-
-def has_loop (edges):
-    """
-    Determines if the loops exist in the dge list
-    
-    Param: 
-    edges: list of edges
-
-    Return: 
-    boolean: has loop or not
-    """
-    import networkx as nx
-    g = nx.DiGraph (edges + map(lambda (v1, v2): (v2, v1), edges))
-    cycles = nx.simple_cycles (g)
-    
-    not_simple_cycles = filter (lambda path: len(path) > 3, cycles) #filter out selfloops
-
-    return  len(not_simple_cycles) > 0
+from util import viz_tree_str, has_loop
 
 def chowliu_learn (data, variables):
     """
@@ -59,8 +42,7 @@ def chowliu_learn (data, variables):
     N = len (variables)
     
     #compute the weights of all edges
-    from itertools import product, combinations
-
+    
     print "calculating pw weight..."
     edge_weight_map = dict(map(lambda (v1, v2): ((v1, v2), calc_weight (v1, v2)), 
                                combinations (variables, 2)))
@@ -117,26 +99,6 @@ def predict (tree, probs, row):
     return reduce (lambda acc, (v1, v2): 
                    acc * probs [(v1, v2)] [(row [v1.var], row [v2.var])], 
                    tree, 1)
-
-def viz_tree_str (tree, variables, directed = True):
-    """
-    the graph viz tree string representation
-    """
-    if directed:
-        edge_str = ""
-    else:
-        edge_str = "dir=none"
-        
-    viz_str = "digraph g{\n"
-    for v1, v2 in tree:
-        #add edges
-        viz_str += ("%s -> %s[%s]\n" %(v1.var, v2.var, edge_str))
-    for v in variables:
-        #add nodes
-        viz_str += ("%s [label='%s',shape=ellipse,fillcolor='burlywood',style='filled'];\n" %(v.var, v.var))
-
-    viz_str += '}';
-    return viz_str
     
 def edge_weight_sorted_by_weight (edge_weights_map):
     """
