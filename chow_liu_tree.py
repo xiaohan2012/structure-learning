@@ -10,7 +10,7 @@ from itertools import product, combinations
 from graph import Variable
 from data_reader import read_row_data
 from suff_stats import Data
-from util import viz_tree_str
+from util import viz_tree_str, has_loop
 
 def chowliu_learn (data, variables):
     """
@@ -43,7 +43,6 @@ def chowliu_learn (data, variables):
     
     #compute the weights of all edges
     
-    print "calculating pw weight..."
     edge_weight_map = dict(map(lambda (v1, v2): ((v1, v2), calc_weight (v1, v2)), 
                                combinations (variables, 2)))
     
@@ -53,7 +52,6 @@ def chowliu_learn (data, variables):
         edge_weight_map_cp [(v2, v1)] = edge_weight_map_cp [(v1, v2)]
     
     #start spanning greedily
-    print "spanning..."
     edges = []
     while len(edges) < N - 1:
         
@@ -83,22 +81,6 @@ def chowliu_learn (data, variables):
             probs [(v2, v1)] [(val2, val1)] = prob
 
     return edges, probs, edge_weight_map_cp
-
-def predict (tree, probs, row):
-    """
-    given the chow&liu tree, predict the joint prob of the data row
-
-    Param:
-    tree: a list of edges
-    probs: the probability distributions of the tree structure
-    row: dict of {"a": 1, "b": 2, ...}
-
-    Return:
-    the joint prob of the data row
-    """
-    return reduce (lambda acc, (v1, v2): 
-                   acc * probs [(v1, v2)] [(row [v1.var], row [v2.var])], 
-                   tree, 1)
     
 def edge_weight_sorted_by_weight (edge_weights_map):
     """
@@ -116,12 +98,15 @@ if __name__ == "__main__":
     import string
     variables = map (lambda letter: Variable(letter, ['1', '2', '3']), string.uppercase)
     
-    print "reading data..."
     data = Data(read_row_data ('train_data.txt'))
     
-    print "learning structure..."
-    tree, probs, edge_weights = chowliu_learn (data, variables)
-    
+    import os, pickle
+    if os.path.exists ("chow_liu_tree.pickle"): 
+        tree, probs, edge_weights = pickle.load (open ("chow_liu_tree.pickle", "r"))
+    else:
+        tree, probs, edge_weights = chowliu_learn (data, variables)
+        pickle.dump (result, open ("chow_liu_tree.pickle", "w"))
+        
     import sys
     try:
         arg = sys.argv [1]
@@ -129,13 +114,24 @@ if __name__ == "__main__":
         usage ()
     
     if arg == "predict":
-        new_rows = read_row_data ('test_data.txt')
-        for row in new_rows:
-            print predict (tree, probs, row);
+        import networkx as nx
+        g = nx.Graph ()
+        g.add_edges_from (tree)
+    
+        from inference import Network, get_factors_MN
+        mn = Network (get_factors_MN (g, variables, data))
+        
+        with open ('test_data.txt') as f:
+            f.readline () #exclude the first row
+            for l in f.readlines ():
+                values = l.strip ().split ()
+                assignment = dict(zip(variables, values))
+                print mn.total_joint_prob (assignment)
+        
     elif arg == "graphviz":
         viz_str = viz_tree_str (tree, variables, directed = False)
         print viz_str
-    elif arg == "sorted_edge":
+    elif arg == "sorted_edges":
         for (v1, v2), w in edge_weight_sorted_by_weight (edge_weights):
             print "%s %s" %(v1, v2)
     else:

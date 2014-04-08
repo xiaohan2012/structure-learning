@@ -50,6 +50,3 @@ def read_row_data (path):
 
 if __name__ == '__main__':
     read_data ('data.txt')
-
-if __package__ == None:
-    __package__ = "structlearn.test"

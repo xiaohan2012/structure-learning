@@ -11,9 +11,9 @@ def marginal_independence (v1, v2, data, hypo_supporting_p = 0.05):
 
     chi2, p, dof, ex = chi2_contingency (table)
     
-    print 'Independence Testing: '
-    print 'Testing %s and %s' %(v1.var, v2.var)
-    print 'p value is %f, thus we %s the independence hypothesis' %(p, p >= hypo_supporting_p and 'support' or 'reject')
+    # print 'Independence Testing: '
+    # print 'Testing %s and %s' %(v1.var, v2.var)
+    # print 'p value is %f, thus we %s the independence hypothesis' %(p, p >= hypo_supporting_p and 'support' or 'reject')
 
     return p >= hypo_supporting_p
 

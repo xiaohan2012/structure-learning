@@ -46,11 +46,17 @@ class Variable (object):
         return "%s" %(self.var)
         
     def __repr__ (self):
-        return str (self)
+        return "Variable: %s" %(str (self))
 
     def __eq__ (self, obj):
         return hasattr (obj, 'var') and hasattr (obj, 'values') and self.var == obj.var and self.values == obj.values
-        
+
+    def __lt__ (self, other):
+        if isinstance (other, Variable):
+            return self.var < other.var
+        else:
+            raise TypeError ('`Other` should be of type `Variable`, but is %s' %(type (other)))
+            
     def __hash__(self):
         return hash (self.var + ','.join(self.values))
 
